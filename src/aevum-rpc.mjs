@@ -13,7 +13,9 @@ async function fetchTrusted(fetcher, url, options) {
     redirect: "error",
     signal: AbortSignal.timeout(8_000),
   });
-  if (!response.ok) throw new Error("QDay RPC HTTP " + response.status);
+  if (!response.ok) {
+    throw Object.assign(new Error("QDay RPC HTTP " + response.status), { status: response.status });
+  }
   return response;
 }
 
@@ -22,7 +24,13 @@ async function call(fetcher, url, method, params = []) {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+  }).catch((error) => {
+    const transactionLookup = method === "eth_getTransactionReceipt" || method === "eth_getTransactionByHash";
+    if (url === explorer && transactionLookup && error.status === 500) return null;
+    throw error;
   });
+  // Newly broadcast transactions can return HTTP 500 until the explorer indexes them.
+  if (response === null) return null;
   const body = await response.json();
   if (body.error) {
     if (url === explorer && method === "eth_getBalance" && body.error === "Balance not found") {

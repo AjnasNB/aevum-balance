@@ -47,7 +47,11 @@ const [merchant, first, second] = accounts.map((account) => createWalletClient({
 const payee = merchant.account.address;
 const priorBalance = await stablecoinBalance(payee);
 const total = amounts[0] + amounts[1];
-const openTx = await merchant.writeContract({ address, abi: invoiceAbi, functionName: "open", args: [total] });
+const write = async (wallet, request) => wallet.writeContract({
+  ...request, type: "legacy", gasPrice: await client.getGasPrice(),
+});
+const openTx = await write(merchant, { address, abi: invoiceAbi, functionName: "open", args: [total] });
+console.log(JSON.stringify({ invoiceTransaction: openTx }));
 const id = openedInvoiceId(await confirm(client, openTx), address);
 
 const evidence = {
@@ -60,11 +64,13 @@ await save();
 
 for (const [index, wallet] of [first, second].entries()) {
   const amount = amounts[index];
-  const approval = await wallet.writeContract({
+  const approval = await write(wallet, {
     address: testToken, abi: tokenAbi, functionName: "approve", args: [address, amount],
   });
+  console.log(JSON.stringify({ payer: wallet.account.address, approvalTransaction: approval }));
   await confirm(client, approval);
-  const hash = await wallet.writeContract({ address, abi: invoiceAbi, functionName: "pay", args: [id, payee, amount] });
+  const hash = await write(wallet, { address, abi: invoiceAbi, functionName: "pay", args: [id, payee, amount] });
+  console.log(JSON.stringify({ payer: wallet.account.address, paymentTransaction: hash }));
   await confirm(client, hash);
   const { remaining } = await readInvoice(client, address, id);
   evidence.payments.push({ payer: wallet.account.address, hash, amount: amount.toString(), remaining: remaining.toString() });

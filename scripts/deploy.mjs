@@ -25,7 +25,12 @@ if (symbol !== "tUSD8" || places !== decimals) throw new Error("Unexpected test 
 
 const { abi, bytecode } = await compile(invoiceContract, "AevumInvoices");
 const wallet = createWalletClient({ account, chain: aevum, transport });
-const hash = await wallet.deployContract({ abi, bytecode, args: [testToken] });
+// The explorer gas estimator requires a recipient, which a creation transaction omits.
+const hash = await wallet.deployContract({
+  abi, bytecode, args: [testToken], gas: 800_000n,
+  type: "legacy", gasPrice: await client.getGasPrice(),
+});
+console.log(JSON.stringify({ deploymentTransaction: hash }));
 const receipt = await confirm(client, hash);
 if (!receipt.contractAddress) throw new Error("No deployed contract address in the transaction receipt.");
 
