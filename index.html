@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Split a tUSD8 invoice across wallets and reconcile every installment on QDay Aevum.">
+  <title>Aevum Balance — tUSD8 checkout</title>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="./"><span class="mark" aria-hidden="true"></span>Aevum Balance</a>
+    <button id="connect" class="outline" type="button">Connect wallet</button>
+  </header>
+  <main>
+    <p class="network"><span></span> QDay Aevum Testnet</p>
+    <h1 id="title">One invoice.<br>Any number of wallets.</h1>
+    <p id="intro" class="intro">Share a tUSD8 checkout link. Installments go directly to the merchant and update one on-chain balance.</p>
+    <p id="status" class="notice" role="status" aria-live="polite" hidden></p>
+    <div class="layout">
+      <section id="checkout" class="card" aria-labelledby="invoice-heading" hidden>
+        <p class="tag" id="invoice-state"></p>
+        <h2 id="invoice-heading">Invoice</h2>
+        <dl class="amounts">
+          <div><dt>Remaining</dt><dd id="remaining"></dd></div>
+          <div><dt>Total</dt><dd id="total"></dd></div>
+        </dl>
+        <p class="merchant"><strong>Merchant wallet</strong><code id="recipient"></code></p>
+        <form id="payment">
+          <label for="pay-amount">Installment in tUSD8</label>
+          <div class="input-line">
+            <input id="pay-amount" name="amount" inputmode="decimal" placeholder="0.00" autocomplete="off" required>
+            <button id="pay-balance" class="outline" type="button">Use remaining</button>
+          </div>
+          <label class="confirm"><input id="confirm-payee" type="checkbox" required> I confirmed the merchant wallet above.</label>
+          <button class="primary" type="submit">Pay installment</button>
+        </form>
+        <div class="row-buttons">
+          <button id="share" class="outline" type="button">Copy checkout link</button>
+          <button id="refresh" class="outline" type="button">Refresh balance</button>
+        </div>
+      </section>
+      <section id="create" class="card" aria-labelledby="create-heading" hidden>
+        <h2 id="create-heading">Create invoice</h2>
+        <p>The wallet you connect receives every installment.</p>
+        <form id="new-invoice">
+          <label for="invoice-total">Invoice total in tUSD8</label>
+          <input id="invoice-total" name="total" inputmode="decimal" placeholder="0.00" autocomplete="off" required>
+          <button class="primary" type="submit">Create checkout link</button>
+        </form>
+      </section>
+      <section id="history" class="card" aria-labelledby="receipt-heading" hidden>
+        <h2 id="receipt-heading">Payment receipt</h2>
+        <p id="empty-receipt">Confirmed installments will appear here.</p>
+        <ol id="receipts"></ol>
+      </section>
+    </div>
+  </main>
+  <footer>Test tokens only <a href="https://faucet.qday.info/en">Get tQDAY and tUSD8</a> <a href="https://explorer-test.qday.info">Aevum Explorer</a></footer>
+  <script type="module" src="/src/app.mjs"></script>
+</body>
+</html>
