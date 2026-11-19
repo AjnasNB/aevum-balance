@@ -13,7 +13,7 @@ Merchant creates a 1 tUSD8 invoice and shares the link. The first payer confirms
 | Documentation | [README](../README.md) |
 | Live Aevum integration | Contract source verified on the Aevum explorer and both tUSD8 installments confirmed. |
 | Demo video | [Live recording](https://ajnasnb.github.io/aevum-balance/demo.mp4) shows the settled invoice and both transactions. |
-| DoraHacks receipt | Signed in and preparing the Build submission. |
+| DoraHacks receipt | Submitted on 19 November 2026 in the Invoice Payments track. DoraHacks confirmed that Aevum Balance is under review. [Challenge page](https://dorahacks.io/hackathon/qday/detail) |
 
 The live Aevum run settled invoice #1 for 1 tUSD8. Two different wallets paid 0.4 and 0.6 tUSD8, leaving zero due. [Live checkout](https://ajnasnb.github.io/aevum-balance/?invoice=1) · [Demo recording](https://ajnasnb.github.io/aevum-balance/demo.mp4) · [Deployed contract](https://explorer-test.qday.info/address/0x20ac27d59439ec12b2ce7d957083470dd7b287e3) · [0.4 tUSD8 receipt](https://explorer-test.qday.info/tx/0x0d1c14cf61a2b524ae492a31c9600624a5b9c5ed981d17be040f4eee7c8394bd) · [0.6 tUSD8 receipt](https://explorer-test.qday.info/tx/0xc6413304c7e349622175fe9ad8b95e590a71ce08cd0255282862e2b36835ee37)
 
