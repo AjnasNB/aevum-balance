@@ -37,7 +37,7 @@ npm run dev
 
 For explorer source verification, submit the contract source and its constructor argument with Solidity 0.8.39, Paris target and optimizer enabled at 200 runs. Use the recorded deploy transaction to match the contract address. [Aevum Explorer](https://explorer-test.qday.info)
 
-The live smoke test writes a receipt to `.local/aevum-evidence.json`. The same invoice ID opens in the browser via `?invoice=<id>`. For a portable demo after deployment, run the packaged web app.
+The live smoke test writes a receipt to `.local/aevum-evidence.json`. Run `node scripts/record-aevum.mjs` to verify both live payment receipts and record the checkout and explorer pages under `.local/recording/`. The same invoice ID opens in the browser via `?invoice=<id>`. For a portable demo after deployment, run the packaged web app.
 
 ```sh
 docker build -t aevum-balance .
