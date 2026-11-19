@@ -1,5 +1,6 @@
 import { writeFile } from "node:fs/promises";
-import { createPublicClient, createWalletClient, http } from "viem";
+import { createPublicClient, createWalletClient } from "viem";
+import { aevumTransport } from "../src/aevum-rpc.mjs";
 import { privateKeyToAccount } from "viem/accounts";
 import { aevum, testToken, decimals } from "../src/chain.mjs";
 import { confirm, tokenAbi } from "../src/invoice.mjs";
@@ -9,7 +10,8 @@ const { AEVM_DEPLOYER_KEY } = process.env;
 if (!AEVM_DEPLOYER_KEY) throw new Error("Provide AEVM_DEPLOYER_KEY for a funded, testnet-only account.");
 
 const account = privateKeyToAccount(AEVM_DEPLOYER_KEY);
-const client = createPublicClient({ chain: aevum, transport: http() });
+const transport = aevumTransport();
+const client = createPublicClient({ chain: aevum, transport });
 if (await client.getChainId() !== aevum.id) throw new Error("Unexpected chain. Deployment paused.");
 if (await client.getBalance({ address: account.address }) === 0n) {
   throw new Error("This testnet address needs tQDAY gas from the official faucet.");
@@ -22,7 +24,7 @@ const [symbol, places] = await Promise.all([
 if (symbol !== "tUSD8" || places !== decimals) throw new Error("Unexpected test token.");
 
 const { abi, bytecode } = await compile(invoiceContract, "AevumInvoices");
-const wallet = createWalletClient({ account, chain: aevum, transport: http() });
+const wallet = createWalletClient({ account, chain: aevum, transport });
 const hash = await wallet.deployContract({ abi, bytecode, args: [testToken] });
 const receipt = await confirm(client, hash);
 if (!receipt.contractAddress) throw new Error("No deployed contract address in the transaction receipt.");

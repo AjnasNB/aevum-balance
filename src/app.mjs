@@ -1,4 +1,5 @@
-import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { createPublicClient, createWalletClient, custom } from "viem";
+import { aevumTransport } from "./aevum-rpc.mjs";
 import { aevum, testToken } from "./chain.mjs";
 import { confirm, invoiceAbi, openedInvoiceId, readInvoice, showAmount, toAmount, tokenAbi } from "./invoice.mjs";
 import deployment from "./deployment.json";
@@ -6,7 +7,7 @@ import "./style.css";
 
 const element = (id) => document.getElementById(id);
 const provider = window.ethereum;
-const client = createPublicClient({ chain: aevum, transport: http() });
+const client = createPublicClient({ chain: aevum, transport: aevumTransport() });
 const contract = deployment.address;
 const checkout = element("checkout");
 const history = element("history");

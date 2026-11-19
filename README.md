@@ -22,7 +22,9 @@ The browser QA opens an invoice, reloads its link as two separate wallets, pays 
 
 - Network is QDay Aevum Testnet, chain ID `44005`, with tQDAY for gas. [Network reference](https://wiki.qday.info/guide/start/add-network)
 - Settlement token is tUSD8 at `0x456569838f1d43009A91ebA4263147Afd7233483`, with six decimals. [Challenge token](https://qday.io/builder-challenge)
-- The merchant needs gas. Two separate payers each need gas and enough tUSD8 for their installment. Use only testnet-specific wallets and store their keys locally. [Faucet](https://faucet.qday.info/en)
+- The merchant needs gas. Two separate payers each need gas and enough tUSD8 for their installment. The web faucet requires a qualifying recipient. The organizer also documents a `/faucet` command for verified Discord members. Use only testnet-specific wallets and store their keys locally. [Challenge faucet instructions](https://qday.io/builder-challenge#faq)
+
+The client checks the chain ID over HTTPS. If the primary RPC is unreachable, it uses QDay’s official explorer RPC and verifies the chain against the explorer’s public configuration. [Explorer RPC methods](https://docs.blockscout.com/devs/apis/rpc/eth-rpc)
 
 Copy `.env.example` to a git-ignored `.env` file and fill in the three testnet keys. The deploy script checks the chain and token metadata before submitting and records the address and deploy hash in `src/deployment.json`.
 
@@ -42,7 +44,7 @@ docker build -t aevum-balance .
 docker run --rm -p 8080:80 aevum-balance
 ```
 
-**Deployment status** · Local contract and browser paths use fixtures. Public Aevum deployment and live receipts require valid RPC TLS and funded test wallets. [Submission checklist](docs/submission.md)
+**Deployment status** · Local contract and browser paths use fixtures. Public Aevum deployment and live receipts require funded test wallets. [Submission checklist](docs/submission.md)
 
 ## Architecture
 
