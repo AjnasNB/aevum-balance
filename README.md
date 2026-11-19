@@ -4,6 +4,8 @@ A single invoice can be paid in installments by multiple wallets. Aevum Balance 
 
 This is a fresh Solidity and browser implementation for PQA Labs’ Aevum Builder Challenge #1. It carries forward the installment idea from [BalanceDue](https://github.com/AjnasNB/balancedue), which used a separate NEAR workflow and off-chain invoice state. [Challenge rules](https://qday.io/builder-challenge)
 
+The live Aevum run settled invoice #1 for 1 tUSD8. Two different wallets paid 0.4 and 0.6 tUSD8, leaving zero due. [Live checkout](https://ajnasnb.github.io/aevum-balance/?invoice=1) · [Demo recording](https://ajnasnb.github.io/aevum-balance/demo.mp4) · [Deployed contract](https://explorer-test.qday.info/address/0x20ac27d59439ec12b2ce7d957083470dd7b287e3) · [0.4 tUSD8 receipt](https://explorer-test.qday.info/tx/0x0d1c14cf61a2b524ae492a31c9600624a5b9c5ed981d17be040f4eee7c8394bd) · [0.6 tUSD8 receipt](https://explorer-test.qday.info/tx/0xc6413304c7e349622175fe9ad8b95e590a71ce08cd0255282862e2b36835ee37)
+
 ## Try it from source
 
 Requires Node.js 22 or newer. The contract and browser QA run against local EVM fixtures.
@@ -44,7 +46,7 @@ docker build -t aevum-balance .
 docker run --rm -p 8080:80 aevum-balance
 ```
 
-**Deployment status** · Local contract and browser paths use fixtures. Public Aevum deployment and live receipts require funded test wallets. [Submission checklist](docs/submission.md)
+The browser rehearsal uses fixtures for local development. The hosted checkout and demo above are from the public Aevum run. [Submission checklist](docs/submission.md)
 
 ## Architecture
 

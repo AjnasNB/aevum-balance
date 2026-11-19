@@ -9,11 +9,13 @@ Merchant creates a 1 tUSD8 invoice and shares the link. The first payer confirms
 | Deliverable | Status |
 | --- | --- |
 | Public MIT-licensed source | [Aevum Balance on GitHub](https://github.com/AjnasNB/aevum-balance) |
-| Working browser prototype and Dockerfile | Builds locally. Aevum mode activates after deployment. |
+| Working browser prototype and Dockerfile | [Hosted checkout](https://ajnasnb.github.io/aevum-balance/?invoice=1) and a buildable Dockerfile. |
 | Documentation | [README](../README.md) |
-| Live Aevum integration | Public deployment, explorer source verification and two real installment hashes pending. |
-| Demo video | Local rehearsal recorded. Final video must show actual Aevum settlement and explorer hashes. |
-| DoraHacks receipt | Pending an eligible live demo and sign-in. |
+| Live Aevum integration | Contract source verified on the Aevum explorer and both tUSD8 installments confirmed. |
+| Demo video | [Live recording](https://ajnasnb.github.io/aevum-balance/demo.mp4) shows the settled invoice and both transactions. |
+| DoraHacks receipt | Signed in and preparing the Build submission. |
+
+The live Aevum run settled invoice #1 for 1 tUSD8. Two different wallets paid 0.4 and 0.6 tUSD8, leaving zero due. [Live checkout](https://ajnasnb.github.io/aevum-balance/?invoice=1) · [Demo recording](https://ajnasnb.github.io/aevum-balance/demo.mp4) · [Deployed contract](https://explorer-test.qday.info/address/0x20ac27d59439ec12b2ce7d957083470dd7b287e3) · [0.4 tUSD8 receipt](https://explorer-test.qday.info/tx/0x0d1c14cf61a2b524ae492a31c9600624a5b9c5ed981d17be040f4eee7c8394bd) · [0.6 tUSD8 receipt](https://explorer-test.qday.info/tx/0xc6413304c7e349622175fe9ad8b95e590a71ce08cd0255282862e2b36835ee37)
 
 ## Demo sequence
 
