@@ -1,8 +1,9 @@
-import { createPublicClient, createWalletClient, custom } from "viem";
+import { BaseError, createPublicClient, createWalletClient, custom, isAddressEqual } from "viem";
 import { aevumTransport } from "./aevum-rpc.mjs";
 import { aevum, testToken } from "./chain.mjs";
 import { confirm, invoiceAbi, openedInvoiceId, readInvoice, showAmount, toAmount, tokenAbi } from "./invoice.mjs";
 import deployment from "./deployment.json";
+import settledDemo from "./settled-demo.json";
 import "./style.css";
 
 const element = (id) => document.getElementById(id);
@@ -58,15 +59,10 @@ function shareUrl() {
   return url;
 }
 
-async function receipts(openedAtBlock) {
-  const events = await client.getContractEvents({
-    address: contract,
-    abi: invoiceAbi,
-    eventName: "PaymentApplied",
-    args: { invoiceId },
-    fromBlock: openedAtBlock,
-  });
-  element("empty-receipt").hidden = events.length > 0;
+function renderReceipts(events, emptyMessage = "Confirmed installments will appear here.") {
+  const empty = element("empty-receipt");
+  empty.textContent = emptyMessage;
+  empty.hidden = events.length > 0;
   element("receipts").replaceChildren(...events.toReversed().map(({ args, transactionHash }) => {
     const row = document.createElement("li");
     const amount = document.createElement("strong");
@@ -79,8 +75,8 @@ async function receipts(openedAtBlock) {
   }));
 }
 
-async function loadInvoice() {
-  invoice = await readInvoice(client, contract, invoiceId);
+function renderInvoice(details) {
+  invoice = details;
   element("create").hidden = true;
   checkout.hidden = false;
   history.hidden = false;
@@ -91,12 +87,53 @@ async function loadInvoice() {
   element("total").textContent = showAmount(invoice.total) + " tUSD8";
   element("recipient").textContent = invoice.payee;
   element("payment").hidden = invoice.remaining === 0n;
+}
+
+function demoReceipt() {
+  if (settledDemo.chainId !== aevum.id || !isAddressEqual(contract, settledDemo.contract)
+      || invoiceId !== BigInt(settledDemo.invoiceId)) return;
+  const events = settledDemo.payments.map(({ payer, amount, hash }) => ({
+    args: { payer, amount: BigInt(amount) },
+    transactionHash: hash,
+  }));
+  const total = events.reduce((sum, event) => sum + event.args.amount, 0n);
+  return { details: { payee: settledDemo.merchant, total, paid: total, remaining: 0n }, events };
+}
+
+function renderRecordedReceipt(events) {
+  renderReceipts(events);
+  report("Live Aevum data is temporarily unavailable. Showing the recorded settlement receipt.");
+}
+
+async function loadInvoice() {
+  const demo = demoReceipt();
+  let live;
   try {
-    await receipts(invoice.openedAtBlock);
+    live = await readInvoice(client, contract, invoiceId);
+  } catch (error) {
+    if (!demo || !(error instanceof BaseError)) throw error;
+    renderInvoice(demo.details);
+    renderRecordedReceipt(demo.events);
+    return;
+  }
+
+  renderInvoice(live);
+  try {
+    const events = await client.getContractEvents({
+      address: contract,
+      abi: invoiceAbi,
+      eventName: "PaymentApplied",
+      args: { invoiceId },
+      fromBlock: live.openedAtBlock,
+    });
+    renderReceipts(events);
   } catch {
-    element("receipts").replaceChildren();
-    element("empty-receipt").hidden = false;
-    element("empty-receipt").textContent = "The receipt is temporarily unavailable. Refresh to try again.";
+    if (demo && live.remaining === 0n && live.total === demo.details.total
+        && isAddressEqual(live.payee, demo.details.payee)) {
+      renderRecordedReceipt(demo.events);
+    } else {
+      renderReceipts([], "The receipt is temporarily unavailable. Refresh to try again.");
+    }
   }
 }
 

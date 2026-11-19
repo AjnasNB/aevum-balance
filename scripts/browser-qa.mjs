@@ -124,6 +124,27 @@ try {
     await page.getByText("Paid in full", { exact: true }).waitFor();
   }
   console.log("Browser verified a share link, two signed fixture payments, zero remaining and two receipt links.");
+
+  const outage = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  try {
+    await outage.route(aevum.rpcUrls.default.http[0] + "/**", (route) => route.abort());
+    await outage.route(aevum.blockExplorers.default.url + "/**", (route) => route.abort());
+    const demoPage = await outage.newPage();
+    await demoPage.goto(new URL("?invoice=1", url).href);
+    await demoPage.getByText("Paid in full", { exact: true }).waitFor();
+    await demoPage.getByText("Showing the recorded settlement receipt.", { exact: false }).waitFor();
+    assert.equal(await demoPage.locator("#remaining").textContent(), "0 tUSD8");
+    assert.equal(await demoPage.locator("#receipts li a").count(), 2);
+    assert.equal(await demoPage.getByRole("button", { name: "Pay installment" }).isVisible(), false);
+    assert.ok(await demoPage.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+
+    await demoPage.goto(new URL("?invoice=2", url).href);
+    await demoPage.locator("#status[data-error]").waitFor();
+    assert.equal(await demoPage.locator("#checkout").isVisible(), false);
+    console.log("Browser verified the settled demo remains readable during an RPC outage, without exposing payment actions.");
+  } finally {
+    await outage.close();
+  }
 } catch (error) {
   console.error("Checkout status:", await page.locator("#status").textContent());
   throw error;

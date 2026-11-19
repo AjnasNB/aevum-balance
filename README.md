@@ -6,6 +6,8 @@ This is a fresh Solidity and browser implementation for PQA Labs’ Aevum Builde
 
 The live Aevum run settled invoice #1 for 1 tUSD8. Two different wallets paid 0.4 and 0.6 tUSD8, leaving zero due. [Live checkout](https://ajnasnb.github.io/aevum-balance/?invoice=1) · [Demo recording](https://ajnasnb.github.io/aevum-balance/demo.mp4) · [Deployed contract](https://explorer-test.qday.info/address/0x20ac27d59439ec12b2ce7d957083470dd7b287e3) · [0.4 tUSD8 receipt](https://explorer-test.qday.info/tx/0x0d1c14cf61a2b524ae492a31c9600624a5b9c5ed981d17be040f4eee7c8394bd) · [0.6 tUSD8 receipt](https://explorer-test.qday.info/tx/0xc6413304c7e349622175fe9ad8b95e590a71ce08cd0255282862e2b36835ee37)
 
+If both RPC endpoints are unavailable, the hosted demo shows the recorded settlement receipt for invoice #1 with an outage notice. Other invoices and new payments require live Aevum data.
+
 ## Try it from source
 
 Requires Node.js 22 or newer. The contract and browser QA run against local EVM fixtures.
